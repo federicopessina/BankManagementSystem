@@ -2,251 +2,266 @@
 #include <fstream>
 #include <cctype>
 #include <iomanip>
-
 #include "Account.h"
-
-using namespace std;
+#include "View.h"
+#include "ViewException.h"
+#include "ViewInputMessage.h"
+#include "ViewOutputMessage.h"
+#include "File.h"
+#include "AccountType.h"
+#include "DataBaseFile.h"
 
 void write_account();
 void display_sp(int);
-void modify_account(int);
-void delete_account(int);
+void modify_account(int accountNumber);
+void delete_account(int accountNumber);
 void display_all();
-void deposit_withdraw(int, int);
-void intro();
+void deposit_withdraw(int n, int option);
 
 
 int main()
 {
-    char ch;
-    int num;
-    intro();
-    do
-    {
-        system("cls");
-        std::cout << "\n Main Menu";
-        std::cout << "\n 1. New Account";
-        std::cout << "\n 2. Deposit Amount";
-        std::cout << "\n 3. Withdraw Amount";
-        std::cout << "\n 4. Balance Enquiry";
-        std::cout << "\n 5. All Account Order list";
-        std::cout << "\n 6. Close an Account";
-        std::cout << "\n 7. Modify an Account";
-        std::cout << "\n 8. Exit";
-        std::cout << "\n Select your Option";
+	char userInput;
+	int number;
 
-        std::cin >> ch;
-        system("cls");
-        switch (ch)
-        {
-        case '1':
-            write_account();
-            break;
-        case '2':
-            std::cout << "\n Enter the Account No.";
-            std::cin >> num;
-            deposit_withdraw(num, 1);
-            break;
-        case '3':
-            std::cout << "\n Enter the Account No.";
-            std::cin >> num;
-            deposit_withdraw(num, 2);
-            break;
-        case '4':
-            std::cout << "\n Enter the Account No.";
-            std::cin >> num;
-            display_sp(num);
-            break;
-        case '5':
-            display_all();
-            break;
-        case '6':
-            std::cout << "\n Enter the Account No.";
-            std::cin >> num;
-            delete_account(num);
-            break;
-        case '7':
-            std::cout << "\n Enter the Account No.";
-            std::cin >> num;
-            modify_account(num);
-            break;
-        case '8':
-            std::cout << "\n Thanks for using BankingSystem App";
-            break;
-        default:
-            std::cout << "\a";
-        }
-        std::cin.ignore();
-        std::cin.get();
+	View::print_intro();
+	std::cin.get();
 
-    } while (ch != '8');
+	do
+	{
+		View::print_menu();
 
-    return 0;
+		std::cin >> userInput;
+
+		View::clear_console();
+		switch (userInput)
+		{
+		case '1':
+			write_account();
+			break;
+		case '2':
+			ViewInputMessage::print_input_account_number();
+			std::cin >> number;
+			deposit_withdraw(number, 1);
+			break;
+		case '3':
+			ViewInputMessage::print_input_account_number();
+			std::cin >> number;
+			deposit_withdraw(number, 2);
+			break;
+		case '4':
+			ViewInputMessage::print_input_account_number();
+			std::cin >> number;
+			display_sp(number);
+			break;
+		case '5':
+			display_all();
+			break;
+		case '6':
+			ViewInputMessage::print_input_account_number();
+			std::cin >> number;
+			delete_account(number);
+			break;
+		case '7':
+			ViewInputMessage::print_input_account_number();
+			std::cin >> number;
+			modify_account(number);
+			break;
+		case '8':
+			View::print_greetings();
+			break;
+		default:
+			std::cout << "\a";
+		}
+		std::cin.ignore();
+		std::cin.get();
+
+	} while (userInput != '8');
+
+	return 0;
 }
 
 void write_account()
 {
-    Account ac;
-    ofstream outfile;
-    outfile.open("account.dat", ios::binary | ios::app);
-    ac.create_account();
-    outfile.write(reinterpret_cast<char*> (&ac), sizeof(Account));
-    outfile.close();
+	Account account;
+	File filePath;
+	std::ofstream outfile;
+
+	//outfile.open("account.dat", std::ios::binary | std::ios::app);
+	outfile.open(filePath.get_account_filename(), std::ios::binary | std::ios::app);
+	account.create_account();
+	outfile.write(reinterpret_cast<char*> (&account), sizeof(Account));
+	outfile.close();
 }
 
 void display_sp(int)
 {
-    Account ac;
-    bool flag = false;
-    ifstream infile;
-    infile.open("account.dat", ios::binary);
-    if (!infile)
-    {
-        std::cout << "File could not be open. Press any key.";
-        return;
-    }
+	bool flag = false;
+	File filePath;
+	std::ifstream infile;
+
+	infile.open(filePath.get_account_filename(), std::ios::binary);
+	if (!infile)
+	{
+		ViewException::print_filenotfound_exception();
+		return;
+	}
 }
 
-void modify_account(int n)
+void modify_account(int accountNumber)
 {
-    bool found = false;
-    Account ac;
-    std::fstream file;
-    file.open("account.dat", ios::binary | ios::in | ios::out);
-    if (!file)
-    {
-        std::cout << "File could not be open. Press Any key. ";
-        return;
-    }
+	bool isFound = false;
+	Account account;
+	File filePath;
+	std::fstream file;
 
-    while (!file.eof() && found == false)
-    {
-        file.read(reinterpret_cast<char*> (&ac), sizeof(Account));
-        if (ac.get_acno() == n)
-        {
-            ac.show_account();
-            std::cout << "\n Enter the New Details Account " << std::endl;
-            ac.modify();
-            int pos = (-1) * static_cast<int> (sizeof(Account));
-            file.seekp(pos, ios::cur);
-            file.write(reinterpret_cast<char*> (&ac), sizeof(Account));
-            std::cout << "\n Record Updated";
-            found = true;
+	file.open(filePath.get_account_filename(), std::ios::binary | std::ios::in | std::ios::out);
+	if (!file)
+	{
+		ViewException::print_filenotfound_exception();
+		return;
+	}
 
-        }
-    }
-    file.close();
-    if (found == false)
-    {
-        std::cout << "\n Record Not Found";
-    }
+	while (!file.eof() && isFound == false)
+	{
+		file.read(reinterpret_cast<char*> (&account), sizeof(Account));
+		if (account.get_account_number() == accountNumber)
+		{
+			account.print_account_list();
+			ViewInputMessage::print_input_details_new_account();
+			
+			account.modify();
+			int position = (-1) * static_cast<int> (sizeof(Account));
+			file.seekp(position, std::ios::cur);
+			file.write(reinterpret_cast<char*> (&account), sizeof(Account));
+			
+			ViewOutputMessage::print_output_record_updated();
+			isFound = true;
+
+		}
+	}
+	file.close();
+	if (isFound == false)
+	{
+		ViewException::print_recordnotfound_exception();
+	}
 
 }
 
-void delete_account(int n)
+void delete_account(int accountNumber)
 {
-    Account ac;
-    ifstream infile;
-    ofstream outfile;
-    infile.open("account.dat", ios::binary);
-    if (!infile)
-    {
-        std::cout << "File could not be open. Press any key.";
-        return;
-    }
-    outfile.open("Temp.dat", ios::binary);
-    infile.seekg(0, ios::beg);
-    while (infile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
-    {
-        if (ac.get_acno() != n)
-        {
-            outfile.write(reinterpret_cast<char*> (&ac), sizeof(Account));
-        }
-    }
-    infile.close();
-    outfile.close();
-    remove("account.dat");
-    rename("Temp.dat", "account.dat");
-    std::cout << "\n Record Deleted.";
+	Account account;
+	std::ifstream infile;
+	std::ofstream outfile;
+	File filePath;
+
+	infile.open(filePath.get_account_filename(), std::ios::binary);
+	if (!infile)
+	{
+		ViewException::print_filenotfound_exception();
+		return;
+	}
+	
+	outfile.open(filePath.get_temporary_filename(), std::ios::binary);
+	infile.seekg(0, std::ios::beg);
+	
+	while (infile.read(reinterpret_cast<char*> (&account), sizeof(Account)))
+	{
+		if (account.get_account_number() != accountNumber)
+		{
+			outfile.write(reinterpret_cast<char*> (&account), sizeof(Account));
+		}
+	}
+
+	infile.close();
+	outfile.close();
+	
+	remove(filePath.get_account_filename().c_str());
+	rename(filePath.get_temporary_filename().c_str(), filePath.get_account_filename().c_str());
+	
+	ViewOutputMessage::print_output_record_deleted();
 }
 
 void display_all()
 {
-    Account ac;
-    ifstream infile;
-    infile.open("account.dat", ios::binary);
-    if (!infile)
-    {
-        std::cout << "file could not be open. Press any key.";
-        return;
-    }
+	Account ac;
+	std::ifstream infile;
+	File filePath;
 
-    std::cout << "\n Account Holder list. \n";
-    std::cout << "\n A/C No.    Name    Type    Balance \n";
-    while (infile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
-    {
-        ac.report();
-    }
-    infile.close();
+	infile.open(filePath.get_account_filename(), std::ios::binary);
+	if (!infile)
+	{
+		ViewException::print_filenotfound_exception();
+		return;
+	}
+
+	ViewOutputMessage::print_account_list_title();
+	ViewOutputMessage::print_account_list_menu();
+	while (infile.read(reinterpret_cast<char*> (&ac), sizeof(Account)))
+	{
+		ac.report();
+	}
+	infile.close();
 }
 
-void deposit_withdraw(int n, int option)
+void deposit_withdraw(int accountNumber, int option)
 {
-    int amt;
-    bool found = false;
-    Account ac;
-    fstream file;
-    file.open("account.dat", ios::binary | ios::in | ios::out);
-    if (!file)
-    {
-        std::cout << "File could not be open. Press any key.";
-        return;
-    }
-    while (!file.eof() && found == false)
-    {
-        file.read(reinterpret_cast<char*> (&ac), sizeof(Account));
-        if (ac.get_acno() == n)
-        {
-            ac.show_account();
-            if (option == 1)
-            {
-                std::cout << "\n To deposit amount. ";
-                std::cout << "\n Enter the amount to deposit. ";
-                std::cin >> amt;
-                ac.make_deposit(amt);
-            }
-            if (option == 2)
-            {
-                std::cout << "\n To withdraw amount";
-                std::cout << "\n Enter the amount to withdraw. ";
-                std::cin >> amt;
-                int bal = ac.get_deposit() - amt;
-                if ((bal < 500 && ac.get_account_type() == 'S' || (bal < 1000 && ac.get_account_type() == 'C')))
-                {
-                    std::cout << "insufficient balance";
-                }
-                else
-                {
-                    ac.withdraw(amt);
-                }
-            }
+	int amount;
+	bool isFound = false;
+	Account account;
+	std::fstream file;
+	File filePath;
+	AccountType accountType;
 
-            int pos = (-1) * static_cast<int>(sizeof(ac));
-            file.seekp(pos, ios::cur);
-            file.write(reinterpret_cast<char*> (&ac), sizeof(Account));
-            std::cout << "\n Record Updated";
-            found = true;
-        }
-    }
-    file.close();
-    if (found == false)
-    {
-        std::cout << "\n Record Not Found ";
-    }
-}
+	file.open(filePath.get_account_filename(), std::ios::binary | std::ios::in | std::ios::out);
+	if (!file)
+	{
+		ViewException::print_filenotfound_exception();
+		return;
+	}
+	while (!file.eof() && isFound == false)
+	{
+		file.read(reinterpret_cast<char*> (&account), sizeof(Account));
+		if (account.get_account_number() == accountNumber)
+		{
+			account.print_account_list();
+			if (option == 1)
+			{
+				ViewOutputMessage::print_output_deposit_title();
+				ViewInputMessage::print_input_amount_to_deposit();
+				std::cin >> amount;
+				account.make_deposit(amount);
+			}
+			if (option == 2)
+			{
+				ViewOutputMessage::print_output_withdraw_title();
+				ViewInputMessage::print_input_amout_to_withdraw();
+				std::cin >> amount;
 
-void intro()
-{
-    std::cout << "Banking System";
-    cin.get();
+				int balance = account.get_deposit() - amount;
+				if ((balance < SAVING_THRESHOLD && account.get_account_type() == accountType.get_saving()
+					|| (balance < CURRENT_THRESHOLD && account.get_account_type() == accountType.get_current())))
+				{
+					ViewOutputMessage::print_output_insufficient_balance();
+				}
+				else
+				{
+					account.withdraw(amount);
+				}
+			}
+
+			int pos = (-1) * static_cast<int>(sizeof(account));
+			file.seekp(pos, std::ios::cur);
+			file.write(reinterpret_cast<char*> (&account), sizeof(Account));
+			ViewOutputMessage::print_output_record_updated();
+			isFound = true;
+		}
+	}
+
+	file.close();
+	
+	if (isFound == false)
+	{
+		ViewException::print_recordnotfound_exception();
+	}
 }

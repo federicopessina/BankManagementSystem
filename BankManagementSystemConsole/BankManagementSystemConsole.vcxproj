@@ -128,10 +128,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="AccountType.cpp" />
     <ClCompile Include="BankManagementSystemConsole.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="DataBaseFile.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="ModelCheck.cpp" />
+    <ClCompile Include="View.cpp" />
+    <ClCompile Include="ViewException.cpp" />
+    <ClCompile Include="ViewInputMessage.cpp" />
+    <ClCompile Include="ViewOutputMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
+    <ClInclude Include="AccountType.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="DataBaseFile.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="ModelCheck.h" />
+    <ClInclude Include="View.h" />
+    <ClInclude Include="ViewException.h" />
+    <ClInclude Include="ViewInputMessage.h" />
+    <ClInclude Include="ViewOutputMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,7 +18,7 @@ void Account::create_account()
 	std::cout << "Account Created";
 }
 
-void Account::show_account() const
+void Account::print_account_list() const
 {
 	std::cout << "\n Account No. : " << acno;
 	std::cout << "\n Account Holder Name : ";
@@ -55,7 +55,7 @@ void Account::report() const
 	std::cout << acno << std::setw(10) << " " << type << std::setw(6) << deposit << std::endl;
 }
 
-int Account::get_acno() const
+int Account::get_account_number() const
 {
 	return acno;
 }
