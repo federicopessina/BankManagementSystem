@@ -11,13 +11,13 @@ void View::clear_console()
 void View::print_intro()
 {
 	std::cout << "\n [Welcome to BankManagementSystem]";
-	std::cout << "\n Press any key to go on ";
+	std::cout << "\n Press Enter to go on";
 }
 
 void View::print_menu()
 {
     View::clear_console();
-    std::cout << "\n Main Menu";
+    std::cout << "\n [Main Menu]";
     std::cout << "\n [1] New Account";
     std::cout << "\n [2] Deposit Amount";
     std::cout << "\n [3] Withdraw Amount";
@@ -26,7 +26,7 @@ void View::print_menu()
     std::cout << "\n [6] Close an Account";
     std::cout << "\n [7] Modify an Account";
     std::cout << "\n [8] Exit";
-    std::cout << "\n Select your Option : ";
+    std::cout << "\n Select your option : ";
 }
 
 void View::print_greetings()

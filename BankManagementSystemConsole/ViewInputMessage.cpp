@@ -3,12 +3,12 @@
 
 void ViewInputMessage::print_input_account_number()
 {
-	std::cout << "\n Enter the Account No.";
+	std::cout << "\n Enter the Account No. : ";
 }
 
 void ViewInputMessage::print_input_details_new_account()
 {
-	std::cout << "\n Enter the New Details Account " << std::endl;
+	std::cout << "\n Enter the New Details Account : " << std::endl;
 }
 
 void ViewInputMessage::print_input_amount_to_deposit()

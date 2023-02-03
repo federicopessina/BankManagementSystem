@@ -18,4 +18,3 @@ int main()
 	Model::main_loop();
 	return 0;
 }
-

@@ -19,7 +19,7 @@ void ViewOutputMessage::print_account_list_title()
 
 void ViewOutputMessage::print_account_list_menu()
 {
-	std::cout << "\n A/C No.    Name    Type    Balance \n";
+	std::cout << "\n AccountNumber    Name    Type    Balance \n";
 }
 
 void ViewOutputMessage::print_output_record_updated()
