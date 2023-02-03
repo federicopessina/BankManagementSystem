@@ -2,23 +2,25 @@
 #include <iomanip>
 
 #include "Account.h"
+#include "ViewInputMessage.h"
+#include "ViewOutputMessage.h"
 
 /// <summary>
 /// Create a new account with the specified name and balance
 /// </summary>
 void Account::create_account()
 {
-	std::cout << "\n Enter the Account No. : ";
+	ViewInputMessage::print_input_account_number();
 	std::cin >> acno;
-	std::cout << "\n Enter the Name of the Account Holder : ";
+	ViewInputMessage::print_input_name_account_holder();
 	std::cin.ignore();
 	std::cin.getline(name, 50);
-	std::cout << "\n Enter the type of Account Current [C] or Savings [S] : ";
+	ViewInputMessage::print_input_type_of_account();
 	std::cin >> type;
 	type = toupper(type);
-	std::cout << "\n Enter the initial amount (must be >500 for Savings and >1000 for Current) : ";
+	ViewInputMessage::print_input_initial_amount();
 	std::cin >> deposit;
-	std::cout << "Account Created";
+	ViewOutputMessage::print_output_account_created();
 }
 
 /// <summary>

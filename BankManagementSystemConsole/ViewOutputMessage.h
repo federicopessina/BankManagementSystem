@@ -11,5 +11,6 @@ public:
     static void print_output_record_updated();
     static void print_output_record_deleted();
     static void print_output_insufficient_balance();
+    static void print_output_account_created();
 };
 
