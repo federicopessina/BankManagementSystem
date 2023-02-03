@@ -28,11 +28,44 @@ void Account::create_account()
 /// </summary>
 void Account::print_account_list() const
 {
-	std::cout << "\n Account No. : " << acno;
+	print_output_account_number();
+	print_output_account_holder();
+	print_output_account_type();
+	print_output_balance_amount();
+}
+
+/// <summary>
+/// Print balance amount of the account in Console
+/// </summary>
+void Account::print_output_balance_amount() const
+{
+	std::cout << "\n Balance Amount : " << deposit;
+}
+
+/// <summary>
+/// Print account number of the account in Console
+/// </summary>
+void Account::print_output_account_type() const
+{
+	std::cout << "\n Type of Account : " << type;
+}
+
+/// <summary>
+/// Print account holder name of the account in Console
+/// </summary>
+void Account::print_output_account_holder() const
+{
 	std::cout << "\n Account Holder Name : ";
 	std::cout << name;
-	std::cout << "\n Type of Account : " << type;
-	std::cout << "\n Balance Amount : " << deposit;
+}
+
+/// <summary>
+/// Print account number of the account in Console
+/// </summary>
+void Account::print_output_account_number() const
+{
+	std::cout << "\n Account No. : ";
+	std::cout << acno;
 }
 
 /// <summary>
@@ -40,15 +73,45 @@ void Account::print_account_list() const
 /// </summary>
 void Account::modify()
 {
-	std::cout << "\n Account No. : " << acno;
-	std::cout << "\n Modify Account Holder Name : ";
+	print_output_account_number();
+	print_output_account_holder_name();
 	std::cin.ignore();
 	std::cin.getline(name, 50);
+	print_input_modify_account_type();
+	type = toupper(type);
+	print_input_modify_balance_amount();
+}
+
+/// <summary>
+/// Print modify type of account input message
+/// </summary>
+/// <returns></returns>
+/// <remarks>Takes the tyoe of account as input</remarks>
+void Account::print_input_modify_account_type()
+{
 	std::cout << "\n Modify Type of Account : ";
 	std::cin >> type;
-	type = toupper(type);
+}
+
+/// <summary>
+/// Print modify balance amount input message
+/// </summary>
+/// <returns></returns>
+/// <remarks>Takes the balance amount as input</remarks>
+void Account::print_input_modify_balance_amount()
+{
 	std::cout << "\n Modify Balance Amount : ";
 	std::cin >> deposit;
+}
+
+/// <summary>
+/// Print account holder name of the account in Console
+/// </summary>
+/// <returns></returns>
+/// <remarks>Takes the account holder name as input</remarks>
+void Account::print_output_account_holder_name()
+{
+	std::cout << "\n Modify Account Holder Name : ";
 }
 
 /// <summary>
@@ -84,7 +147,7 @@ void Account::report() const
 int Account::get_account_number() const
 {
 	return acno;
-}
+}	
 
 /// <summary>
 /// Get the account holder name
